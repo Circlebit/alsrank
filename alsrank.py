@@ -1,9 +1,24 @@
-# this script performs a google search for given items
-# and checks on how  many werbeartikel-schenken.de domains
-# are in the results
+# this script performs a google search for given items and checks
+# on how many results of a certain domain are in there.
 
 import google
 import terminaltables as tt
+
+# the URL you want to search for in the results
+TARGET = "amazon.com"
+
+# depth of search - 10 means the first ten results (which equals page 1)
+DEPTH = 10
+
+# Query elements #
+items = ['ballpen', 'ball-point pen'] # items you want to search for
+pre = ['metal'] # words before items
+post = ['blue'] # words after the items
+
+# the above example will peform google searches for the queries
+#  'ballpen', 'ballpen blue', 'metal ballpen',
+#  'ball-point pen', 'ball-point pen blue', 'metal ball-point pen',
+# and will output a table with all results that have 'amazon.com' in their URL
 
 
 def get_urls(query, n=10):
@@ -35,10 +50,11 @@ def combine_queries(items, pre=[], post=[]):
             result.append(e + " " + item)
         for e in post:
             result.append(item + " " + e)
+    print(result)
     return result
 
 
-def check_queries(queries, target="werbeartikel-schenken.de", depth=10):
+def check_queries(queries, target=TARGET, depth=10):
     # check a list of google queries for appearance of target
     result = []
     all_urls = []
@@ -54,7 +70,7 @@ def check_queries(queries, target="werbeartikel-schenken.de", depth=10):
 def pr_table(rawdata):
     # takes data as given back by check_queries() and prints pretty table
     nofind = []
-    tabledata = [["Suchbegriff", "w-s.de Treffer"]]
+    tabledata = [["Query", "Hits with %s" % TARGET]]
 
     for target in rawdata:
         if not target[1]:    # if there are no urls in this targets list:
@@ -68,16 +84,11 @@ def pr_table(rawdata):
     # printing the table with terminaltables
     table = tt.AsciiTable(tabledata)
     print(table.table)
-    print("\nkeine Treffer für: ")
+    print("\nno hits for: ")
     print(*nofind, sep=', ')
 
 
-# Suchbegriffe #
-items = ['Wassereis', 'Eis']
-pre = ['bedrucktes']
-post = ['mit Werbedruck', 'mit Logo', 'bedrucken']
-
-# Los geht's! #
+# Let's go! #
 queries = combine_queries(items, pre, post)  # make list of queries
-data = check_queries(queries, depth=10)  # get results from google
+data = check_queries(queries, depth=DEPTH)  # get results from google
 pr_table(data)  # print nice table

@@ -1,2 +1,4 @@
 ## What and Why?
-This script was quickly written to automate the task of googleing stuff and check for a given domain in the results
+This script was quickly written to automate the task of googleing combinations of words and check for certain domains in the results
+
+![screenshot](screenshot.png)
